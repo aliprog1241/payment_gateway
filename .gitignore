@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtualenv
+venv/
+ENV/
+env/
+.venv/
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+
+# Local settings
+local_settings.py
+
+# Postgres (اختیاری، فقط فایل‌های dump یا backup)
+*.psql
+*.pgsql
+*.sql
+
+# Django migrations (اگه نمی‌خوای توی ریپو باشه)
+*/migrations/*
+!*/migrations/__init__.py
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.swp
+
+# System
+.DS_Store
+Thumbs.db
