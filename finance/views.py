@@ -16,8 +16,8 @@ class ChargeWalletView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            payment_link, authority = zpal_request_handler(settings.ZARRINPAL['gateway_request_url'],form.cleaned_data['amount'],
-                    "wallet_charge", "miri03369@gmail.com", None, settings.ZARRINPAL['gateway_callback_url']
+            payment_link, authority = zpal_request_handler(settings.ZARINPAL['gateway_request_url'],form.cleaned_data['amount'],
+                    "wallet_charge", "miri03369@gmail.com", None, settings.ZARINPAL['gateway_callback_url']
 
             )
             if payment_link is not None:
