@@ -121,3 +121,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ZARINPAL = {
+#     'gateway_request_url':'https://sandbox.zarinpal.com/pg/v4/payment/request.json',
+#     'merchant_id':ZARINPAL_MERCHANT_ID,
+# }
+
+ZARINPAL = {
+    "gateway_request_url": "https://sandbox.zarinpal.com/pg/v4/payment/request.json",
+    "verify_url": "https://sandbox.zarinpal.com/pg/v4/payment/verify.json",
+    "startpay_url": "https://sandbox.zarinpal.com/pg/StartPay/",
+    "merchant_id": ZARINPAL_MERCHANT_ID,
+}
