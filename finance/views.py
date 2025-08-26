@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views import View
 from finance.forms import ChargeWalletForm
-from finance.utils import zpal_request_handler
+from finance.utils.zarinpal import zpal_request_handler
 
 
 class ChargeWalletView(View):
@@ -11,3 +11,12 @@ class ChargeWalletView(View):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name, {'form': self.form_class()})
+
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            zpal_request_handler(settings.ZARRINPAL['gateway_request_url'],form.cleaned_data['amount'],
+            "wallet_charge", "miri03369@gmail.com",
+
+        )

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from PaymentGateway.local_settings import *
 
@@ -51,7 +51,9 @@ ROOT_URLCONF = 'PaymentGateway.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,14 +124,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ZARINPAL = {
-#     'gateway_request_url':'https://sandbox.zarinpal.com/pg/v4/payment/request.json',
-#     'merchant_id':ZARINPAL_MERCHANT_ID,
-# }
+
 
 ZARINPAL = {
     "gateway_request_url": "https://sandbox.zarinpal.com/pg/v4/payment/request.json",
-    "verify_url": "https://sandbox.zarinpal.com/pg/v4/payment/verify.json",
-    "startpay_url": "https://sandbox.zarinpal.com/pg/StartPay/",
     "merchant_id": ZARINPAL_MERCHANT_ID,
 }
