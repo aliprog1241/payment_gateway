@@ -66,3 +66,28 @@ class Gateway(models.Model):
     @property
     def credentials(self):
         return json.loads(self.auth_data)
+
+class Payment(models.Model):
+    invoice_number = models.UUIDField(
+        verbose_name=_("invoice number"), unique=True, default=uuid.uuid4
+    )
+    amount = models.PositiveIntegerField(
+        verbose_name=_("payment amount"), editable=True
+    )
+    gateway = models.ForeignKey(
+        Gateway,
+        related_name="payments",
+        null=True,
+        blank=True,
+        verbose_name=_("gateway"),
+        on_delete=models.SET_NULL,
+    )
+    is_paid = models.BooleanField(verbose_name=_("is paid status"), default=False)
+    payment_log = models.TextField(verbose_name=_("logs"), blank=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_("User"),
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    authority = models.CharField(max_length=64, verbose_name=_("authority"), blank=True)
