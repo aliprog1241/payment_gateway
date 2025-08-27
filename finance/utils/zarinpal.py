@@ -6,7 +6,7 @@ def zpal_request_handler(merchant_id, amount, detail, user_email, user_phone_num
     url = settings.ZARINPAL["gateway_request_url"]
 
     metadata = {"email": user_email}
-    if user_phone_number:  # فقط اگر موبایل داشت
+    if user_phone_number:
         metadata["mobile"] = str(user_phone_number)
 
     data = {
