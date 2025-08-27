@@ -9,6 +9,7 @@ from finance.utils.zarinpal import zpal_request_handler, zpal_payment_checker
 
 
 class Gateway(models.Model):
+
     FUNCTION_SAMAN = "saman"
     FUNCTION_SHAPARAK = "shaparak"
     FUNCTION_FINOTECH = "finotech"
@@ -67,6 +68,7 @@ class Gateway(models.Model):
     def credentials(self):
         return json.loads(self.auth_data)
 
+
 class Payment(models.Model):
     invoice_number = models.UUIDField(
         verbose_name=_("invoice number"), unique=True, default=uuid.uuid4
@@ -112,6 +114,7 @@ class Payment(models.Model):
             user_phone_number=getattr(self.user, "phone_number", None),
             callback=settings.ZARINPAL["gateway_callback_url"],
         )
+
     @property
     def bank_page(self):
         handler = self.gateway.get_request_handler()
@@ -119,8 +122,8 @@ class Payment(models.Model):
             data = self.get_hander_data()
             link, authority = handler(**data)
             if authority is not None:
-                    self.authority = authority
-                    self.save()
+                self.authority = authority
+                self.save()
             return link
 
     @property

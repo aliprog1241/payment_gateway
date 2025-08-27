@@ -2,18 +2,19 @@ import requests
 from django.conf import settings
 
 
-def zpal_request_handler(
-    merchant_id, amount, detail, user_email, user_phone_number, callback
-):
+def zpal_request_handler(merchant_id, amount, detail, user_email, user_phone_number, callback):
     url = settings.ZARINPAL["gateway_request_url"]
+
+    metadata = {"email": user_email}
+    if user_phone_number:  # فقط اگر موبایل داشت
+        metadata["mobile"] = str(user_phone_number)
 
     data = {
         "merchant_id": merchant_id,
         "amount": amount,
         "description": detail,
         "callback_url": callback,
-        "email": user_email,
-        "mobile": user_phone_number,
+        "metadata": metadata,
     }
 
     headers = {
@@ -22,13 +23,14 @@ def zpal_request_handler(
     }
 
     res = requests.post(url, json=data, headers=headers)
+    print("Request Data:", data)
+    print("Zarinpal Response:", res.text)
     res.raise_for_status()
     result = res.json()
 
     if result.get("data", {}).get("code") == 100:
         authority = result["data"]["authority"]
         payment_url = f"https://sandbox.zarinpal.com/pg/StartPay/{authority}"
-
         return payment_url, authority
     else:
         return None, None
