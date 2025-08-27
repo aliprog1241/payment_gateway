@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>نتیجه پرداخت</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin-top: 100px;
+        }
+        .success {
+            color: green;
+            font-size: 20px;
+        }
+        .error {
+            color: red;
+            font-size: 20px;
+        }
+        .ref-id {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+{% if is_paid %}
+    <p class="success">✅ پرداخت موفقیت‌آمیز بود.</p>
+    {% if ref_id %}
+        <p class="ref-id">کد رهگیری شما: {{ ref_id }}</p>
+    {% endif %}
+{% else %}
+    <p class="error">❌ پرداخت با خطا مواجه شد یا لغو گردید.</p>
+{% endif %}
+</body>
+</html>

@@ -30,9 +30,36 @@ class ChargeWalletView(View):
         return render(request, self.template_name, {'form': form})
 
 
+# class VerifyView(View):
+#     template_name = 'callback.html'
+#     def get(self, request, *args, **kwargs):
+#         authority = request.GET.get('Authority')
+#         is_paid, ref_id = zpal_payment_checker(
+#             settings.ZARINPAL['merchant_id'], 10000, authority
+#         )
+#         return render(request, self.template_name, {'is_paid': is_paid, 'ref_id': ref_id})
 class VerifyView(View):
+    template_name = 'callback.html'
+
     def get(self, request, *args, **kwargs):
-        authority = request.GET('authority')
+        status = request.GET.get("Status")
+        authority = request.GET.get("Authority")
+
+        if status != "OK":
+            return render(request, self.template_name, {
+                "is_paid": False,
+                "ref_id": None,
+                "message": "❌ پرداخت انجام نشد یا توسط کاربر لغو شد."
+            })
+
+        amount = 10000
+
         is_paid, ref_id = zpal_payment_checker(
-            settings.ZARINPAL['merchant_id'], 10000, authority
+            settings.ZARINPAL["merchant_id"], amount, authority
         )
+
+        return render(request, self.template_name, {
+            "is_paid": is_paid,
+            "ref_id": ref_id,
+            "message": "✅ پرداخت موفق!" if is_paid else "❌ پرداخت ناموفق"
+        })
