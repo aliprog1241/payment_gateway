@@ -122,3 +122,19 @@ class Payment(models.Model):
                 self.authority = authority
                 self.save()
             return link
+
+    @property
+    def title(self):
+        return _("Instant payment")
+
+    def status_changed(self):
+        return self.is_paid != self._b_is_paid
+
+    def verify(self, data):
+        handler = self.gateway.get_verify_handler
+        if not self.is_paid and handler is not None:
+            is_paid, ref_id = handler(**data)
+            if is_paid:
+                self.is_paid = True
+                self.save()
+        return self.is_paid
