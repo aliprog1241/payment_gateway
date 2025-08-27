@@ -112,3 +112,13 @@ class Payment(models.Model):
             user_phone_number=getattr(self.user, "phone_number", None),
             callback=settings.ZARINPAL["gateway_callback_url"],
         )
+    @property
+    def bank_page(self):
+        handler = self.gateway.get_request_handler()
+        if handler is not None:
+            data = self.get_hander_data()
+            link, authority = handler(**data)
+            if authority is not None:
+                self.authority = authority
+                self.save()
+            return link
