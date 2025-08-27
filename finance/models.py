@@ -119,8 +119,8 @@ class Payment(models.Model):
             data = self.get_hander_data()
             link, authority = handler(**data)
             if authority is not None:
-                self.authority = authority
-                self.save()
+                    self.authority = authority
+                    self.save()
             return link
 
     @property
@@ -138,3 +138,16 @@ class Payment(models.Model):
                 self.is_paid = True
                 self.save()
         return self.is_paid
+
+    def get_gateway(self):
+        gateway = Gateway.objects.filter(is_enable=True).first()
+        return gateway.gateway_code
+
+    def save_log(self, data, scope="Request handler", save=True):
+        generated_log = "[{}][{}] {}\n".format(timezone.now(), scope, data)
+        if self.payment_log != "":
+            self.payment_log += generated_log
+        else:
+            self.payment_log = generated_log
+        if save:
+            self.save()
