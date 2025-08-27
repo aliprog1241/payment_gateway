@@ -35,3 +35,34 @@ class Gateway(models.Model):
     is_enable = models.BooleanField(verbose_name=_("is enabled"), default=True)
     auth_data = models.TextField(verbose_name=_("auth data"), null=True, blank=True)
 
+    class Meta:
+        verbose_name = _("Gateway")
+        verbose_name_plural = _("Gateways")
+
+    def __str__(self):
+        return self.title
+
+    def get_request_handler(self):
+        handlers = {
+            self.FUNCTION_SAMAN: None,
+            self.FUNCTION_SHAPARAK: None,
+            self.FUNCTION_FINOTECH: None,
+            self.FUNCTION_ZARRINPAL: zpal_request_handler,
+            self.FUNCTION_PARSIAN: None,
+        }
+        return handlers[self.gateway_code]
+
+    @property
+    def get_verify_handler(self):
+        handlers = {
+            self.FUNCTION_SAMAN: None,
+            self.FUNCTION_SHAPARAK: None,
+            self.FUNCTION_FINOTECH: None,
+            self.FUNCTION_ZARRINPAL: zpal_payment_checker,
+            self.FUNCTION_PARSIAN: None,
+        }
+        return handlers[self.gateway_code]
+
+    @property
+    def credentials(self):
+        return json.loads(self.auth_data)
