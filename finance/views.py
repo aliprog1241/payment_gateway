@@ -30,14 +30,6 @@ class ChargeWalletView(View):
         return render(request, self.template_name, {'form': form})
 
 
-# class VerifyView(View):
-#     template_name = 'callback.html'
-#     def get(self, request, *args, **kwargs):
-#         authority = request.GET.get('Authority')
-#         is_paid, ref_id = zpal_payment_checker(
-#             settings.ZARINPAL['merchant_id'], 10000, authority
-#         )
-#         return render(request, self.template_name, {'is_paid': is_paid, 'ref_id': ref_id})
 class VerifyView(View):
     template_name = 'callback.html'
 
