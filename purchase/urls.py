@@ -4,6 +4,6 @@ from purchase.views import PurchaseCrateView
 
 urlpatterns = [
 
-    path('creat/<int:package_id>',  PurchaseCrateView.as_view(), name='create-purchase'),
+    path('creat/<int:package_id>/',  PurchaseCrateView.as_view(), name='create-purchase'),
 
 ]

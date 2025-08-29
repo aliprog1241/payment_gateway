@@ -12,3 +12,16 @@ class Purchase(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.user} - {self.package}'
+
+
+    @classmethod
+    def create(cls, package, user):
+        if package.is_enabled:
+            return cls.objects.create(
+                user=user, package=package, price=package.price,
+
+            )
+        return None
+
