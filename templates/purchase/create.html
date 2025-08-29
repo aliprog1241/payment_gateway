@@ -5,6 +5,6 @@
     <title>creat purchase</title>
 </head>
 <body>
-{% if purchase %} Purchase number {{ purchase.id }} created {% else %} purchase not crated{% endif %}
+{% if purchase %} Purchase number {{ purchase.id }} created, status: {{ purchase.get_status_display }} {% else %} purchase not crated{% endif %}
 </body>
 </html>

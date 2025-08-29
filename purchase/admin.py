@@ -8,5 +8,6 @@ from purchase.models import Purchase
 
 @register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['user', 'package', 'price', 'status']
+    list_filter = ['status']
 
