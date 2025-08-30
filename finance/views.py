@@ -87,5 +87,5 @@ class PaymenyGatewayView(View):
         payment_link = payment.bank_page
         if payment_link:
             return redirect(payment_link)
-
-        return render(request, 'finance/payment_detail.html', {"payment": payment})
+        gateway = Gateway.objects.filter(is_enabled=True)
+        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateways": gateway})
