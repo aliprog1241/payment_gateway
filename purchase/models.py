@@ -19,7 +19,7 @@ class Purchase(models.Model):
     package = models.ForeignKey(Package, related_name='purchases', on_delete=models.SET_NULL, null=True )
     price = models.PositiveBigIntegerField()
     status = models.SmallIntegerField(choices=STATUS_CHOICES, default=NO_PAID)
-    payment =models.ForeignKey(Payment, related_name='purchases', on_delete=models.PROTECT)
+    payment =models.ForeignKey(Payment, related_name='purchases', on_delete=models.PROTECT, null=True)
     created_time = models.DateTimeField(auto_now_add=True)
     modified_time = models.DateTimeField(auto_now=True)
 
@@ -27,18 +27,21 @@ class Purchase(models.Model):
         return f'{self.user} - {self.package}'
 
 
-    @classmethod
-    def creat_payment(cls, package, user ):
+    @staticmethod
+    def creat_payment( package, user ):
         return Payment.objects.create(amount=package.price, user=user)
+
+
 
     @classmethod
     def create(cls, package, user):
         if package.is_enabled:
             with transaction.atomic():
-            payment = cls.creat_payment(package, user)
-            purchase =  cls.objects.create(
-                user=user, package=package, price=package.price, payment=payment
+                payment = cls.creat_payment(package, user)
+                purchase =  cls.objects.create(
+                    user=user, package=package, price=package.price, payment=payment
 
-            )
+                )
+            return purchase
         return None
 

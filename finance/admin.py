@@ -1,3 +1,7 @@
 from django.contrib import admin
+from django.contrib.admin import register
 
-# Register your models here.
+from finance.models import Gateway, Payment
+
+admin.site.register(Payment)
+admin.site.register(Gateway)
