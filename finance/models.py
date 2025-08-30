@@ -112,7 +112,7 @@ class Payment(models.Model):
             detail=str(self.title),
             user_email=self.user.email,
             user_phone_number=getattr(self.user, "phone_number", None),
-            callback=settings.ZARINPAL["gateway_callback_url"],
+            callback="http://127.0.0.1:8000/finance/verify/",
         )
 
     @property
