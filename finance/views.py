@@ -67,11 +67,11 @@ class PaymentView(View):
         except Payment.DoesNotExist:
             raise Http404
 
-        gateway = Gateway.objects.filter(is_enabled=True)
+        gateways = Gateway.objects.filter(is_enabled=True)
 
-        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateway": gateway})
+        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateways": gateways})
 class PaymenyGatewayView(View):
-    def get(self, request, invoice_number, gateway, *args, **kwargs):
+    def get(self, request, invoice_number, gateway_code, *args, **kwargs):
         try:
             payment = Payment.objects.get(invoice_number=invoice_number)
 
@@ -87,5 +87,5 @@ class PaymenyGatewayView(View):
         payment_link = payment.bank_page
         if payment_link:
             return redirect(payment_link)
-        gateway = Gateway.objects.filter(is_enabled=True)
-        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateways": gateway})
+        gateways = Gateway.objects.filter(is_enabled=True)
+        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateways": gateways})
