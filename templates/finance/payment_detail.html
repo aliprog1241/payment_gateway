@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>payment detail</title>
+</head>
+<body>
+<P>title: {{ payment.purchases.title }}</P>
+<P>payment id: {{ payment.invoice_number }}</P>
+<P>payment amount: {{ payment.amount }}</P>
+Gatewayas:
+{% for gateway in gateways %}
+    <p>{{ gateway.title }}</p>
+
+{% endfor %}
+</body>
+</html>

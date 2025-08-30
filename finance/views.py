@@ -1,7 +1,9 @@
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.views import View
 from finance.forms import ChargeWalletForm
+from finance.models import Payment, Gateway
 from finance.utils.zarinpal import zpal_request_handler, zpal_payment_checker
 
 
@@ -55,3 +57,16 @@ class VerifyView(View):
             "ref_id": ref_id,
             "message": "✅ پرداخت موفق!" if is_paid else "❌ پرداخت ناموفق"
         })
+
+class PaymentView(View):
+
+    def get(self, request, invoice_number, *args, **kwargs):
+        try:
+            payment = Payment.objects.get(invoice_number=invoice_number)
+
+        except Payment.DoesNotExist:
+            raise Http404
+
+        gateway = Gateway.objects.filter(is_enabled=True)
+
+        return render(request, 'finance/payment_detail.html', {"payment": payment, "gateway": gateway})

@@ -33,7 +33,7 @@ class Gateway(models.Model):
     gateway_code = models.CharField(
         max_length=12, verbose_name=_("gateway code"), choices=GATEWAY_FUNCTIONS
     )
-    is_enable = models.BooleanField(verbose_name=_("is enabled"), default=True)
+    is_enabled = models.BooleanField(verbose_name=_("is enabled"), default=True)
     auth_data = models.TextField(verbose_name=_("auth data"), null=True, blank=True)
 
     class Meta:
