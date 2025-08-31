@@ -98,6 +98,9 @@ class Payment(models.Model):
         verbose_name = _("Payment")
         verbose_name_plural = _("Payments")
 
+    # def save(self, *args, **kwargs):
+    #     return super().save(*args, **kwargs)
+
     def __str__(self):
         return self.invoice_number.hex
 

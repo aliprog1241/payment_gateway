@@ -7,13 +7,15 @@ from purchase.models import Purchase
 
 @receiver(post_save, sender=Payment)
 def callback(sender, instance, created, **kwargs):
-    print('signal called!!!')
-    if instance.is_paid:
-        purchase = instance.purchases.first()
-        purchase.status = Purchase.PAID
-        purchase.save()
+    if instance.is_paid and  not instance._b_is_paid:
+        print('purchase signals fired!!!')
+        if instance.purchase.exists():
+            purchase = instance.purchases.first()
+            purchase.status = Purchase.PAID
+            purchase.save()
 
 
 @receiver(post_init, sender=Payment)
-def store_is_paid_data(sender, instance):
-    pass
+def store_is_paid_data(sender, instance, **kwargs):
+    # print(' post_init signal called!!!')
+    instance._b_is_paid = instance.is_paid
