@@ -17,3 +17,5 @@ class Command(BaseCommand):
 
         if users.exists():
             users.update(is_active=False)
+
+        print(','.join(users.values_list('username')))
