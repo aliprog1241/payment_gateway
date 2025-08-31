@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('username', nargs='+', type=str)
-        parser.add_argument('--isstaff', action='active_true',help='Deactive if user is not staff')
+        parser.add_argument('--isstaff', help='Deactive if user is not staff')
 
 
 
@@ -18,4 +18,4 @@ class Command(BaseCommand):
         if users.exists():
             users.update(is_active=False)
 
-        print(','.join(users.values_list('username')))
+        print(','.join(users.values_list('username', flat=True)))
