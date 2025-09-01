@@ -21,3 +21,8 @@ class PurchaseCrateView(LoginRequiredMixin, View):
         purchase = Purchase.create(package, request.user)
         return render(request, 'purchase/create.html', {'purchase': purchase})
 
+
+class PurchaseListView(View):
+    def get( self, request, *args, **kwargs):
+        purchases = Purchase.objects.all()
+        return render(request, 'purchase/list.html', {'purchases': Purchases})

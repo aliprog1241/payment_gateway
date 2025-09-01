@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>purchase list</title>
+
+
+</head>
+<body>
+{% for purchase in purchases %}
+    <p>{{ purchase.amount }}</p>
+{% endfor %}
+</body>
+</html>
