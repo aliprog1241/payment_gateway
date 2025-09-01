@@ -23,6 +23,6 @@ class PurchaseCrateView(LoginRequiredMixin, View):
 
 
 class PurchaseListView(View):
-    def get( self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         purchases = Purchase.objects.all()
-        return render(request, 'purchase/list.html', {'purchases': Purchases})
+        return render(request, 'purchase/list.html', {'purchases': purchases})
