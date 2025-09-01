@@ -111,6 +111,8 @@ LANGUAGES = (
 ('en-us', 'English'),
 ('fa-ir', 'persian'),
 )
+
+
 TIME_ZONE = "Asia/Tehran"
 
 USE_I18N = True
