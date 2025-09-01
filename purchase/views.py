@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render
 from django.views import View
+from django.views.decorators.cache import cache_page
 
 import purchase
 from package.models import Package
@@ -22,7 +23,12 @@ class PurchaseCrateView(LoginRequiredMixin, View):
         return render(request, 'purchase/create.html', {'purchase': purchase})
 
 
-class PurchaseListView(View):
-    def get(self, request, *args, **kwargs):
-        purchases = Purchase.objects.all()
-        return render(request, 'purchase/list.html', {'purchases': purchases})
+@cache_page(300)
+def purchases_list(request, username=None):
+    purchases = Purchase.objects.all()
+    if username is not None:
+        purchases = purchases.filter(user__username=username)
+
+
+    print('view ')
+    return render(request, 'purchase/list.html', {'purchases': purchases})
