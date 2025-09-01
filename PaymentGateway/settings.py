@@ -109,10 +109,12 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
 ('en-us', 'English'),
-('fa-ir', 'persian'),
+('fa', 'persian'),
 )
 
-
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 TIME_ZONE = "Asia/Tehran"
 
 USE_I18N = True
