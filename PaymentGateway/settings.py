@@ -140,3 +140,9 @@ ZARINPAL = {
     "gateway_callback_url": "http://127.0.0.1:8000/finance/verify/",
     "merchant_id": ZARINPAL_MERCHANT_ID,
 }
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+    }
+}
