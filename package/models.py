@@ -1,9 +1,9 @@
 from django.db import models
-from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 
 class Package(models.Model):
-    title = models.CharField(max_length=48, verbose_name=gettext('title'))
-    price = models.PositiveBigIntegerField(verbose_name=gettext('price'))
+    title = models.CharField(max_length=48, verbose_name=_('title'))
+    price = models.PositiveBigIntegerField(verbose_name=_('price'))
     description = models.TextField(blank=True)
     days = models.PositiveSmallIntegerField()
     is_enabled = models.BooleanField(default=True)
@@ -12,8 +12,8 @@ class Package(models.Model):
     modified_time = models.DateTimeField(auto_now=True)
 
     class Meta:
-        verbose_name = gettext("Packages")
-        verbose_name_plural = gettext("Packages")
+        verbose_name = _("Packages")
+        verbose_name_plural = _("Packages")
 
     def __str__(self):
         return self.title
