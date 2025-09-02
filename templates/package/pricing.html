@@ -1,114 +1,599 @@
-{% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Pricing example for Bootstrap</title>
+    <title>قیمت‌گذاری - تم مشکی</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href={% static "package/assets/dist/css/bootstrap.min.css" %} rel="stylesheet">
+    <!-- Bootstrap RTL CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    <link href={% static "package/css/pricing.css" %} rel="stylesheet">
+    <style>
+      /* تم مشکی کلی */
+      body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e0e6ed;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+      }
+
+      /* هدر با گلس مورفیزم */
+      .navbar-custom {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        margin: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-brand {
+        color: #ffffff !important;
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.9) !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        padding: 0.5rem 1rem !important;
+        border-radius: 8px;
+        margin: 0 0.2rem;
+      }
+
+      .nav-link:hover {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .btn-signup {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.6rem 1.5rem;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-signup:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        color: white;
+      }
+
+      /* بخش عنوان */
+      .pricing-header {
+        padding: 4rem 2rem;
+        text-align: center;
+      }
+
+      .pricing-header h1 {
+        font-size: 3.5rem;
+        font-weight: 800;
+        background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+        background-size: 300% 300%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient 3s ease infinite;
+        margin-bottom: 1.5rem;
+      }
+
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+
+      .pricing-header p {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* کارت‌های سفید مدرن */
+      .pricing-card {
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        transition: all 0.4s ease;
+        color: #2c3e50;
+        overflow: hidden;
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .pricing-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-header-custom {
+        background: transparent;
+        border: none;
+        padding: 2rem 1.5rem 1rem;
+        text-align: center;
+      }
+
+      .package-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin: 0;
+      }
+
+      .card-body-custom {
+        padding: 0 2rem 2rem;
+      }
+
+      .price-display {
+        font-size: 3rem;
+        font-weight: 800;
+        color: #2c3e50;
+        margin: 1rem 0;
+      }
+
+      .price-currency {
+        font-size: 1rem;
+        color: #7f8c8d;
+        font-weight: 500;
+      }
+
+      /* فهرست ویژگی‌ها */
+      .features-list {
+        list-style: none;
+        padding: 0;
+        margin: 2rem 0;
+      }
+
+      .features-list li {
+        padding: 0.8rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        color: #34495e;
+        font-weight: 500;
+        position: relative;
+        padding-right: 2rem;
+      }
+
+      .features-list li::before {
+        content: '✓';
+        position: absolute;
+        right: 0;
+        color: #27ae60;
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+
+      .features-list li:last-child {
+        border-bottom: none;
+      }
+
+      /* دکمه خرید */
+      .btn-purchase {
+        background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 1rem 2rem;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-purchase:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.5);
+        color: white;
+      }
+
+      /* انیمیشن ظاهر شدن کارت‌ها */
+      .card-animate {
+        animation: slideInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      .card-animate:nth-child(1) { animation-delay: 0.1s; }
+      .card-animate:nth-child(2) { animation-delay: 0.2s; }
+      .card-animate:nth-child(3) { animation-delay: 0.3s; }
+
+      @keyframes slideInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* فوتر مدرن */
+      .footer-dark {
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        margin-top: 4rem;
+        padding: 3rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-title {
+        color: #ffffff;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .footer-link {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: block;
+        padding: 0.3rem 0;
+      }
+
+      .footer-link:hover {
+        color: #ffffff;
+        transform: translateX(5px);
+      }
+
+      .footer-brand {
+        filter: brightness(0) invert(1);
+      }
+
+      /* ریسپانسیو */
+      @media (max-width: 768px) {
+        .pricing-header h1 {
+          font-size: 2.5rem;
+        }
+
+        .navbar-custom {
+          margin: 10px;
+        }
+
+        .price-display {
+          font-size: 2.5rem;
+        }
+      }
+
+      /* اتکت پیشنهادی */
+      .recommended-badge {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #ff6b6b, #feca57);
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      }
+
+      .card-recommended {
+        border: 2px solid transparent;
+        background: linear-gradient(white, white) padding-box,
+                    linear-gradient(45deg, #667eea, #764ba2) border-box;
+      }
+
+      /* اسکرول بار سفارشی */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        border-radius: 4px;
+      }
+    </style>
   </head>
 
   <body>
+    <!-- هدر مدرن -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="bi bi-gem me-2"></i>
+          نام شرکت
+        </a>
 
-    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-      <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5>
-      <nav class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">Features</a>
-        <a class="p-2 text-dark" href="#">Enterprise</a>
-        <a class="p-2 text-dark" href="#">Support</a>
-        <a class="p-2 text-dark" href="#">Pricing</a>
-      </nav>
-      <a class="btn btn-outline-primary" href="#">Sign up</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border: none; color: white;">
+          <i class="bi bi-list"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#">ویژگی‌ها</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">سازمانی</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">پشتیبانی</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">قیمت‌گذاری</a>
+            </li>
+          </ul>
+          <a class="btn btn-signup" href="#">
+            <i class="bi bi-person-plus me-2"></i>
+            ثبت نام
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- بخش عنوان -->
+    <div class="pricing-header">
+      <h1>قیمت‌گذاری</h1>
+      <p>به سرعت یک جدول قیمت‌گذاری مؤثر برای مشتریان احتمالی خود بسازید. این قالب با اجزای پیش‌فرض Bootstrap و کمی سفارشی‌سازی ساخته شده است.</p>
     </div>
 
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 class="display-4">Pricing</h1>
-      <p class="lead">Quickly build an effective pricing table for your potential customers with this Bootstrap example. It's built with default Bootstrap components and utilities with little customization.</p>
-    </div>
-
+    <!-- کارت‌های قیمت‌گذاری -->
     <div class="container">
-      <div class="card-deck mb-3 text-center">
+      <div class="row justify-content-center">
 
-        {% for package in packages %}
-          <div class="card mb-4 box-shadow">
-            <div class="card-header">
-              <h4 class="my-0 font-weight-normal">{{ package.title }}</h4>
+        <!-- پکیج پایه -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card pricing-card card-animate h-100">
+            <div class="card-header-custom">
+              <h4 class="package-title">
+                <i class="bi bi-rocket-takeoff me-2 text-primary"></i>
+                پکیج پایه
+              </h4>
             </div>
-            <div class="card-body">
-              <h1 class="card-title pricing-card-title">{{ package.price }} <small class="text-muted">/ mo</small></h1>
-              <ul class="list-unstyled mt-3 mb-4">
-                {% for attr in package.attributes.all %}
-                    <li>{{ attr.title }}</li>
-                {% endfor %}
+            <div class="card-body-custom d-flex flex-column">
+              <div class="price-display text-center">
+                ۱۹۹,۰۰۰
+                <small class="price-currency">تومان / ماه</small>
+              </div>
+              <ul class="features-list flex-grow-1">
+                <li>۱۰ کاربر فعال</li>
+                <li>۱۰۰ گیگابایت فضای ذخیره‌سازی</li>
+                <li>پشتیبانی ایمیلی</li>
+                <li>مرکز راهنمایی</li>
+                <li>گزارش‌گیری پایه</li>
               </ul>
-              <a href="{% url 'create-purchase' package.id %}" type="button" class="btn btn-lg btn-block btn-outline-primary">خرید اشتراک</a>
+              <button class="btn btn-purchase mt-auto">
+                <i class="bi bi-cart-plus me-2"></i>
+                خرید اشتراک
+              </button>
             </div>
-          </div>
-        {% endfor %}
-           </div>
-
-      <footer class="pt-4 my-md-5 pt-md-5 border-top">
-        <div class="row">
-          <div class="col-12 col-md">
-            <img class="mb-2" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
-            <small class="d-block mb-3 text-muted">&copy; 2017-2018</small>
-          </div>
-          <div class="col-6 col-md">
-            <h5>Features</h5>
-            <ul class="list-unstyled text-small">
-              <li><a class="text-muted" href="#">Cool stuff</a></li>
-              <li><a class="text-muted" href="#">Random feature</a></li>
-              <li><a class="text-muted" href="#">Team feature</a></li>
-              <li><a class="text-muted" href="#">Stuff for developers</a></li>
-              <li><a class="text-muted" href="#">Another one</a></li>
-              <li><a class="text-muted" href="#">Last time</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md">
-            <h5>Resources</h5>
-            <ul class="list-unstyled text-small">
-              <li><a class="text-muted" href="#">Resource</a></li>
-              <li><a class="text-muted" href="#">Resource name</a></li>
-              <li><a class="text-muted" href="#">Another resource</a></li>
-              <li><a class="text-muted" href="#">Final resource</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md">
-            <h5>About</h5>
-            <ul class="list-unstyled text-small">
-              <li><a class="text-muted" href="#">Team</a></li>
-              <li><a class="text-muted" href="#">Locations</a></li>
-              <li><a class="text-muted" href="#">Privacy</a></li>
-              <li><a class="text-muted" href="#">Terms</a></li>
-            </ul>
           </div>
         </div>
-      </footer>
+
+        <!-- پکیج حرفه‌ای (پیشنهادی) -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card pricing-card card-recommended card-animate h-100">
+            <div class="recommended-badge">
+              <i class="bi bi-star-fill me-1"></i>
+              پیشنهاد ویژه
+            </div>
+            <div class="card-header-custom">
+              <h4 class="package-title">
+                <i class="bi bi-lightning-charge me-2 text-warning"></i>
+                پکیج حرفه‌ای
+              </h4>
+            </div>
+            <div class="card-body-custom d-flex flex-column">
+              <div class="price-display text-center">
+                ۴۹۹,۰۰۰
+                <small class="price-currency">تومان / ماه</small>
+              </div>
+              <ul class="features-list flex-grow-1">
+                <li>۵۰ کاربر فعال</li>
+                <li>۵۰۰ گیگابایت فضای ذخیره‌سازی</li>
+                <li>پشتیبانی ۲۴/۷</li>
+                <li>گزارش‌گیری پیشرفته</li>
+                <li>امکانات سفارشی‌سازی</li>
+                <li>API دسترسی</li>
+              </ul>
+              <button class="btn btn-purchase mt-auto">
+                <i class="bi bi-cart-plus me-2"></i>
+                خرید اشتراک
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- پکیج سازمانی -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card pricing-card card-animate h-100">
+            <div class="card-header-custom">
+              <h4 class="package-title">
+                <i class="bi bi-building me-2 text-success"></i>
+                پکیج سازمانی
+              </h4>
+            </div>
+            <div class="card-body-custom d-flex flex-column">
+              <div class="price-display text-center">
+                ۹۹۹,۰۰۰
+                <small class="price-currency">تومان / ماه</small>
+              </div>
+              <ul class="features-list flex-grow-1">
+                <li>کاربران نامحدود</li>
+                <li>فضای ذخیره‌سازی نامحدود</li>
+                <li>مدیر اختصاصی حساب</li>
+                <li>گزارش‌گیری تحلیلی</li>
+                <li>امنیت پیشرفته</li>
+                <li>یکپارچه‌سازی سفارشی</li>
+                <li>آموزش تیم</li>
+              </ul>
+              <button class="btn btn-purchase mt-auto">
+                <i class="bi bi-telephone me-2"></i>
+                تماس با فروش
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
+    <!-- فوتر مدرن -->
+    <footer class="footer-dark">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 col-md-4 mb-4">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-gem me-2 text-light" style="font-size: 1.5rem;"></i>
+              <span class="footer-title">نام شرکت</span>
+            </div>
+            <small class="text-muted">&copy; ۱۴۰۳ - تمامی حقوق محفوظ است</small>
+          </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src={% static "package/assets/js/vendor/jquery-slim.min.js" %}><\/script>')</script>
-    <script src={% static "package/assets/js/vendor/popper.min.js" %}></script>
-    <script src={% static "package/assets/dist/js/bootstrap.min.js" %}></script>
-    <script src={% static "package/assets/js/vendor/holder.min.js" %}></script>
+          <div class="col-6 col-md-2 mb-4">
+            <h6 class="footer-title">ویژگی‌ها</h6>
+            <a class="footer-link" href="#">امکانات جالب</a>
+            <a class="footer-link" href="#">ویژگی تصادفی</a>
+            <a class="footer-link" href="#">ویژگی تیمی</a>
+            <a class="footer-link" href="#">ابزار توسعه‌دهندگان</a>
+          </div>
+
+          <div class="col-6 col-md-2 mb-4">
+            <h6 class="footer-title">منابع</h6>
+            <a class="footer-link" href="#">مستندات</a>
+            <a class="footer-link" href="#">راهنمای API</a>
+            <a class="footer-link" href="#">مطالعات موردی</a>
+            <a class="footer-link" href="#">وبلاگ</a>
+          </div>
+
+          <div class="col-6 col-md-2 mb-4">
+            <h6 class="footer-title">شرکت</h6>
+            <a class="footer-link" href="#">درباره ما</a>
+            <a class="footer-link" href="#">تیم</a>
+            <a class="footer-link" href="#">موقعیت‌ها</a>
+            <a class="footer-link" href="#">تماس</a>
+          </div>
+
+          <div class="col-6 col-md-2 mb-4">
+            <h6 class="footer-title">قانونی</h6>
+            <a class="footer-link" href="#">حریم خصوصی</a>
+            <a class="footer-link" href="#">شرایط استفاده</a>
+            <a class="footer-link" href="#">کوکی‌ها</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
     <script>
-      Holder.addTheme('thumb', {
-        bg: '#55595c',
-        fg: '#eceeef',
-        text: 'Thumbnail'
+      // انیمیشن ظاهر شدن کارت‌ها هنگام اسکرول
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+          }
+        });
+      }, observerOptions);
+
+      // مشاهده تمام کارت‌ها
+      document.querySelectorAll('.card-animate').forEach(card => {
+        observer.observe(card);
       });
+
+      // اضافه کردن افکت‌های تعاملی
+      document.querySelectorAll('.pricing-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.style.zIndex = '10';
+        });
+
+        card.addEventListener('mouseleave', function() {
+          this.style.zIndex = '1';
+        });
+      });
+
+      // انیمیشن دکمه‌های خرید
+      document.querySelectorAll('.btn-purchase').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          // ایجاد افکت ریپل
+          const ripple = document.createElement('span');
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+
+          ripple.style.cssText = `
+            position: absolute;
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+          `;
+
+          this.style.position = 'relative';
+          this.style.overflow = 'hidden';
+          this.appendChild(ripple);
+
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+
+          // شبیه‌سازی فرآیند خرید
+          const originalText = this.innerHTML;
+          this.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>در حال پردازش...';
+          this.disabled = true;
+
+          setTimeout(() => {
+            this.innerHTML = '<i class="bi bi-check-circle me-2"></i>موفق!';
+            setTimeout(() => {
+              this.innerHTML = originalText;
+              this.disabled = false;
+            }, 1500);
+          }, 2000);
+        });
+      });
+
+      // CSS برای افکت ریپل
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     </script>
   </body>
 </html>
