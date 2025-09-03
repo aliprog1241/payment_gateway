@@ -1,16 +1,645 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Charge wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شارژ کیف پول</title>
+
+    <!-- Bootstrap RTL CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.rtl.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        /* پس‌زمینه گرادیان */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-attachment: fixed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+
+        /* کانتینر اصلی */
+        .wallet-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* هدر */
+        .wallet-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wallet-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.05) 2px,
+                rgba(255, 255, 255, 0.05) 4px
+            );
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .wallet-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wallet-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wallet-subtitle {
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* بخش فرم */
+        .wallet-body {
+            padding: 2.5rem;
+        }
+
+        /* موجودی فعلی */
+        .current-balance {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #e3f2fd;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .current-balance::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: scan 2s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .balance-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2e7d32;
+            margin: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* گروه فرم سفارشی */
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        /* دکمه‌های مبلغ پیشنهادی */
+        .amount-suggestions {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .amount-btn {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .amount-btn:hover,
+        .amount-btn.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        /* دکمه شارژ */
+        .charge-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 1.2rem 2rem;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .charge-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s ease;
+        }
+
+        .charge-btn:hover::before {
+            left: 100%;
+        }
+
+        .charge-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .charge-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* لودینگ دکمه */
+        .charge-btn.loading {
+            pointer-events: none;
+        }
+
+        .charge-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* پیام‌های وضعیت */
+        .status-message {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .status-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .status-error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* لینک بازگشت */
+        .back-link {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 10;
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        /* ریسپانسیو */
+        @media (max-width: 768px) {
+            .wallet-container {
+                margin: 1rem;
+                border-radius: 20px;
+            }
+
+            .wallet-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .amount-suggestions {
+                gap: 0.5rem;
+            }
+
+            .amount-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .balance-amount {
+                font-size: 1.7rem;
+            }
+        }
+
+        /* انیمیشن ذرات پس‌زمینه */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
 </head>
 <body>
+    <!-- ذرات پس‌زمینه -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; width: 8px; height: 8px; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; width: 12px; height: 12px; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 30%; width: 6px; height: 6px; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 40%; width: 10px; height: 10px; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 50%; width: 8px; height: 8px; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 60%; width: 14px; height: 14px; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 70%; width: 6px; height: 6px; animation-delay: 0.5s;"></div>
+        <div class="particle" style="left: 80%; width: 10px; height: 10px; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 90%; width: 8px; height: 8px; animation-delay: 3.5s;"></div>
+    </div>
 
-charge wallet
-<form method="post">
-{{ form.as_p }}
-    {% csrf_token %}
-<button type="submit">Charge</button>
-</form>
+    <div class="container">
+        <div class="wallet-container">
+            <!-- هدر -->
+            <div class="wallet-header">
+                <a href="#" class="back-link" onclick="history.back()">
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+                <div class="wallet-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+                <h1 class="wallet-title">شارژ کیف پول</h1>
+                <p class="wallet-subtitle">موجودی خود را افزایش دهید</p>
+            </div>
+
+            <!-- بدنه فرم -->
+            <div class="wallet-body">
+                <!-- موجودی فعلی -->
+                <div class="current-balance">
+                    <div class="balance-label">
+                        <i class="bi bi-wallet me-1"></i>
+                        موجودی فعلی
+                    </div>
+                    <div class="balance-amount">
+                        ۲,۵۰۰,۰۰۰ تومان
+                    </div>
+                </div>
+
+                <!-- پیام وضعیت -->
+                <div id="statusMessage" class="status-message"></div>
+
+                <!-- فرم شارژ -->
+                <form method="post" id="chargeForm">
+                    <!-- CSRF Token (Django) -->
+                    <!-- {% csrf_token %} -->
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-cash-coin me-2"></i>
+                            مبلغ شارژ (تومان)
+                        </label>
+
+                        <!-- دکمه‌های مبلغ پیشنهادی -->
+                        <div class="amount-suggestions">
+                            <button type="button" class="amount-btn" data-amount="100000">
+                                ۱۰۰ هزار
+                            </button>
+                            <button type="button" class="amount-btn" data-amount="250000">
+                                ۲۵۰ هزار
+                            </button>
+                            <button type="button" class="amount-btn" data-amount="500000">
+                                ۵۰۰ هزار
+                            </button>
+                            <button type="button" class="amount-btn" data-amount="1000000">
+                                ۱ میلیون
+                            </button>
+                        </div>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="amountInput"
+                            name="amount"
+                            placeholder="مبلغ دلخواه را وارد کنید"
+                            required
+                        >
+                        <small class="form-text text-muted mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            حداقل مبلغ شارژ: ۱۰,۰۰۰ تومان
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="bi bi-credit-card me-2"></i>
+                            روش پرداخت
+                        </label>
+                        <select class="form-control" name="payment_method" required>
+                            <option value="">انتخاب کنید</option>
+                            <option value="card">کارت بانکی</option>
+                            <option value="online">درگاه آنلاین</option>
+                            <option value="crypto">رمزارز</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="charge-btn" id="chargeBtn">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        شارژ کیف پول
+                    </button>
+                </form>
+
+                <!-- اطلاعات اضافی -->
+                <div class="row mt-4">
+                    <div class="col-6 text-center">
+                        <div class="text-primary">
+                            <i class="bi bi-shield-check" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <small class="text-muted">امن و مطمئن</small>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="text-success">
+                            <i class="bi bi-lightning" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <small class="text-muted">سریع و آنی</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // فرمت کردن اعداد فارسی
+        function formatNumber(num) {
+            return new Intl.NumberFormat('fa-IR').format(num);
+        }
+
+        // تبدیل اعداد انگلیسی به فارسی
+        function convertToPersianNumber(str) {
+            const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+            return str.replace(/\d/g, function(match) {
+                return persianNumbers[parseInt(match)];
+            });
+        }
+
+        // مدیریت دکمه‌های مبلغ پیشنهادی
+        document.querySelectorAll('.amount-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // حذف کلاس active از سایر دکمه‌ها
+                document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+
+                // اضافه کردن کلاس active به دکمه فعلی
+                this.classList.add('active');
+
+                // قرار دادن مبلغ در input
+                const amount = this.dataset.amount;
+                const amountInput = document.getElementById('amountInput');
+                amountInput.value = formatNumber(amount);
+
+                // انیمیشن فوکوس
+                amountInput.focus();
+                amountInput.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    amountInput.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // فرمت کردن input هنگام تایپ
+        document.getElementById('amountInput').addEventListener('input', function() {
+            let value = this.value.replace(/[^\d]/g, '');
+            if (value) {
+                this.value = formatNumber(value);
+            }
+
+            // حذف کلاس active از دکمه‌ها اگر کاربر دستی تایپ کند
+            document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+        });
+
+        // نمایش پیام وضعیت
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.className = `status-message status-${type} show`;
+            statusDiv.innerHTML = `
+                <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${message}
+            `;
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusDiv.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // مدیریت فرم
+        document.getElementById('chargeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const chargeBtn = document.getElementById('chargeBtn');
+            const amountInput = document.getElementById('amountInput');
+            const paymentMethod = document.querySelector('[name="payment_method"]');
+
+            // اعتبارسنجی
+            if (!amountInput.value.trim()) {
+                showStatus('لطفاً مبلغ شارژ را وارد کنید', 'error');
+                amountInput.focus();
+                return;
+            }
+
+            if (!paymentMethod.value) {
+                showStatus('لطفاً روش پرداخت را انتخاب کنید', 'error');
+                paymentMethod.focus();
+                return;
+            }
+
+            const amount = parseInt(amountInput.value.replace(/[^\d]/g, ''));
+            if (amount < 10000) {
+                showStatus('حداقل مبلغ شارژ ۱۰,۰۰۰ تومان است', 'error');
+                amountInput.focus();
+                return;
+            }
+
+            // شروع لودینگ
+            chargeBtn.classList.add('loading');
+            chargeBtn.innerHTML = '<span style="opacity: 0;">شارژ کیف پول</span>';
+
+            // شبیه‌سازی درخواست
+            setTimeout(() => {
+                chargeBtn.classList.remove('loading');
+                chargeBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>شارژ موفق';
+
+                showStatus(`مبلغ ${convertToPersianNumber(formatNumber(amount))} تومان با موفقیت به کیف پول شما اضافه شد`, 'success');
+
+                // بازگشت به حالت عادی
+                setTimeout(() => {
+                    chargeBtn.innerHTML = '<i class="bi bi-plus-circle me-2"></i>شارژ کیف پول';
+                    // پاک کردن فرم
+                    amountInput.value = '';
+                    paymentMethod.value = '';
+                    document.querySelectorAll('.amount-btn').forEach(btn => btn.classList.remove('active'));
+                }, 2000);
+
+                // در اینجا می‌توانید فرم را واقعاً ارسال کنید
+                // this.submit();
+
+            }, 2000);
+        });
+
+        // انیمیشن ذرات تصادفی
+        document.querySelectorAll('.particle').forEach((particle, index) => {
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        });
+
+        // اضافه کردن ذرات جدید به صورت دینامیک
+        setInterval(() => {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = '100%';
+            particle.style.width = particle.style.height = (Math.random() * 8 + 6) + 'px';
+            particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            particle.style.opacity = Math.random() * 0.3 + 0.1;
+
+            document.querySelector('.particles').appendChild(particle);
+
+            // حذف ذره پس از 6 ثانیه
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }, 2000);
+    </script>
 </body>
 </html>
